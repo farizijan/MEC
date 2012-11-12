@@ -1,0 +1,62 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <Button
+        android:id="@+id/jadwal_button"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="74dp"
+        android:text="@string/jadwal_button" />
+
+    <Button
+        android:id="@+id/tugas_button"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/jadwal_button"
+        android:layout_below="@+id/jadwal_button"
+        android:layout_marginTop="19dp"
+        android:text="@string/tugas_button" />
+
+    <Button
+        android:id="@+id/logout_button"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tugas_button"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="114dp"
+        android:text="@string/logout_button" />
+
+    <TextView
+        android:id="@+id/Hari"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="36dp"
+        android:textSize="20dp"
+        android:text="HARI" />
+
+    <Button
+        android:id="@+id/Button01"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tugas_button"
+        android:layout_below="@+id/tugas_button"
+        android:onClick="tampilNotif"
+        android:layout_marginTop="15dp"
+        android:text="Notifikasi" />
+
+    <Button
+        android:id="@+id/exit_button"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/logout_button"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="26dp"
+        android:text="Exit" />
+
+</RelativeLayout>
