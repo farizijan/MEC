@@ -29,7 +29,7 @@ public class Login extends Activity implements OnClickListener {
         getMenuInflater().inflate(R.menu.activity_login, menu);
         return true;
     }
-
+    public static String username;
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -39,10 +39,11 @@ public class Login extends Activity implements OnClickListener {
 		String vpass=pass.getText().toString();
 		switch (v.getId()) {
 		case R.id.button1:
-			if(("a".equals(vUname))&&("b".equals(vpass))){
+			if("b".equals(vpass)){
 				finish();
 				Intent i = new Intent(this, MainMenu.class );
 				startActivity(i);
+				username=vUname;
 			}
 			else {
 				Intent i = new Intent(this, LoginAlert.class );

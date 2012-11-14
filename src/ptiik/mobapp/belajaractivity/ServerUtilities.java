@@ -55,17 +55,16 @@ public final class ServerUtilities {
     static boolean register(final Context context, final String regId) {
         Log.i(TAG, "registering device (regId = " + regId + ")");
         String serverUrl = SERVER_URL ;
-        String uname = "farizijan";
+        String uname = Login.username;
+        
         //mengambil device id android
         TelephonyManager tMgr =(TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
-        String mPhoneNumber = tMgr.getLine1Number();
         String devId= tMgr.getDeviceId();
         Map<String, String> params = new HashMap<String, String>();
         //untuk ngirim pesan ke web
         params.put("regId", regId);
         params.put("username", uname);
-        params.put("user_id", devId);
-        params.put("phone_no", mPhoneNumber);
+        params.put("device_id", devId);
         long backoff = BACKOFF_MILLI_SECONDS + random.nextInt(1000);
         // Once GCM returns a registration id, we need to register it in the
         // demo server. As the server might be down, we will retry it a couple

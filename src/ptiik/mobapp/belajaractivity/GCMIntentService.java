@@ -16,7 +16,7 @@
 package ptiik.mobapp.belajaractivity;
 
 import static ptiik.mobapp.belajaractivity.CommonUtilities.SENDER_ID;
-import static ptiik.mobapp.belajaractivity.CommonUtilities.displayMessage;
+
 
 
 import android.app.Notification;
@@ -25,11 +25,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.view.View;
-import android.app.Activity;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+
 
 import com.google.android.gcm.GCMBaseIntentService;
 import com.google.android.gcm.GCMRegistrar;
