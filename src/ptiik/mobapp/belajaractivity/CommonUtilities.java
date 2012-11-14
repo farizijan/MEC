@@ -27,7 +27,7 @@ public final class CommonUtilities {
     /**
      * Base URL of the Demo Server (such as http://my_host:8080/gcm-demo)
      */
-    static final String SERVER_URL = "http://www.farizijan.com/mobapp/gcm/index.php";
+    static final String SERVER_URL = "http://www.farizijan.com/mobapp/gcm/";
 
     /**
      * Google API project id registered to use GCM.
