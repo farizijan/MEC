@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.util.Log;
 import android.view.Menu;
 import android.view.ContextMenu;
@@ -79,6 +80,12 @@ public class MainMenu extends Activity implements OnClickListener {
                 // hence the use of AsyncTask instead of a raw thread.
                 final Context context = this;
                 mRegisterTask = new AsyncTask<Void, Void, Void>() {
+                	private ProgressDialog dialog;
+                	protected Context applicationContext;
+                	@Override
+                	protected void onPreExecute() {
+        		            this.dialog = ProgressDialog.show(applicationContext, "Login Process", "Please Wait...", true);
+       		        }
 
                     @Override
                     protected Void doInBackground(Void... params) {
@@ -106,7 +113,8 @@ public class MainMenu extends Activity implements OnClickListener {
             }
         }
         //END GCM
-        
+        View tugasButton=findViewById(R.id.tugas_button);
+        tugasButton.setOnClickListener(this);
         View logoutButton=findViewById(R.id.logout_button);
         logoutButton.setOnClickListener(this);
         View exitButton=findViewById(R.id.exit_button);
@@ -130,10 +138,14 @@ public class MainMenu extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
+		case R.id.tugas_button:
+			Intent i = new Intent(this, tampilTugas.class );
+			startActivity(i);
+			break;
 		case R.id.logout_button:
 			finish();
-			Intent i = new Intent(this, Login.class );
-			startActivity(i);
+			Intent logout = new Intent(this, Login.class );
+			startActivity(logout);
 			break;
 		case R.id.exit_button:
 			finish();

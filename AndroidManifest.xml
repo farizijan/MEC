@@ -44,6 +44,10 @@
             android:label="@string/title_activity_main_menu" >
         </activity>
         <activity
+            android:name=".tampilTugas"
+            android:label="Tampil Tugas" >
+        </activity>
+        <activity
             android:name=".LoginAlert"
             android:label="@string/title_activity_login_alert"
             android:theme="@android:style/Theme.Dialog" >
