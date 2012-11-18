@@ -48,6 +48,10 @@
             android:label="Tampil Tugas" >
         </activity>
         <activity
+            android:name=".EditTugas"
+            android:label="Edit Tugas" >
+        </activity>
+        <activity
             android:name=".LoginAlert"
             android:label="@string/title_activity_login_alert"
             android:theme="@android:style/Theme.Dialog" >

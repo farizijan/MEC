@@ -73,13 +73,13 @@ public class tampilTugas extends ListActivity {
 						.toString();
 
 				// Starting new intent
-				//Intent in = new Intent(getApplicationContext(),
-				//		EditProductActivity.class);
+				Intent in = new Intent(getApplicationContext(),
+						EditTugas.class);
 				// sending pid to next activity
-				//in.putExtra(TAG_TUGASID, idTugas);
+				in.putExtra(TAG_TUGASID, idTugas);
 				
 				// starting new activity and expecting some response back
-				//startActivityForResult(in, 100);
+				startActivityForResult(in, 100);
 			}
 		});
 
@@ -146,7 +146,7 @@ public class tampilTugas extends ListActivity {
 
 						// Storing each json item in variable
 						String id = c.getString(TAG_TUGASID);
-						String judul = c.getString(TAG_JUDUL);
+						String judul = c.getString("id_matkul")+" - "+c.getString(TAG_JUDUL);
 
 						// creating new HashMap
 						HashMap<String, String> map = new HashMap<String, String>();
