@@ -25,14 +25,18 @@ public class EditTugas extends Activity {
 	TextView txtJudul;
 	TextView txtDeskripsi;
 	TextView tanggalMulai;
-	TextView jawaban;
 	TextView tanggalSelesai;
+	EditText jawaban;
 	Button btnSave;
 	Button btnDelete;
 
 	String id_tugas;
 	String id_matkul;
 
+	String judul;
+	String deskripsi;
+	String tgl_mulai;
+	String tgl_selesai;
 	// Progress Dialog
 	private ProgressDialog pDialog;
 
@@ -40,10 +44,10 @@ public class EditTugas extends Activity {
 	JSONParser jsonParser = new JSONParser();
 
 	// single product url
-	private static final String url_tugas_detail = "http://10.0.2.2/mec/get_tugas_details.php";
+	private static final String url_tugas_detail = "http://farizijan.com/mobapp/get_tugas_details.php";
 
 	// url to update product
-	private static final String url_update_product = "http://10.0.2.2/androWS/android_connect/update_product.php";
+	//private static final String url_update_product = "http://10.0.2.2/androWS/android_connect/update_product.php";
 	
 	// url to delete product
 	//private static final String url_delete_product = "http://10.0.2.2/androWS/android_connect/delete_product.php";
@@ -68,7 +72,7 @@ public class EditTugas extends Activity {
 		// getting product id (pid) from intent
 		id_tugas = i.getStringExtra(TAG_IDTUGAS);
 		id_matkul = i.getStringExtra("id_matkul");
-
+		Log.d("Tugas Details","ID_TUGAS:"+id_tugas+", ID_MATKUL: "+id_matkul);
 		// Getting complete product details in background thread
 		new GetTugasDetails().execute();
 
@@ -108,47 +112,50 @@ public class EditTugas extends Activity {
 		protected String doInBackground(String... params) {
 
 			// updating UI from Background Thread
-			runOnUiThread(new Runnable() {
-				public void run() {
+			//runOnUiThread(new Runnable() {
+				//public void run() {
 					// Check for success tag
 					int success;
+					Log.d("Tugas Details2","ID_TUGAS:"+id_tugas+", ID_MATKUL: "+id_matkul);
+					// Building Parameters
+					List<NameValuePair> params2 = new ArrayList<NameValuePair>();
+					params2.add(new BasicNameValuePair("id_tugas", id_tugas));
+					params2.add(new BasicNameValuePair("id_matkul", id_matkul));
+
+					// getting product details by making HTTP request
+					// Note that product details url will use GET request
+					JSONObject json = jsonParser.makeHttpRequest(
+							url_tugas_detail, "GET", params2);
+
+					// check your log for json response
+					Log.d("Tugas Details", json.toString());
+					
 					try {
-						// Building Parameters
-						List<NameValuePair> params = new ArrayList<NameValuePair>();
-						params.add(new BasicNameValuePair("id_tugas", id_tugas));
-						params.add(new BasicNameValuePair("id_matkul", id_matkul));
-
-						// getting product details by making HTTP request
-						// Note that product details url will use GET request
-						JSONObject json = jsonParser.makeHttpRequest(
-								url_tugas_detail, "GET", params);
-
-						// check your log for json response
-						Log.d("Single Product Details", json.toString());
+						
 						
 						// json success tag
 						success = json.getInt(TAG_SUCCESS);
 						if (success == 1) {
 							// successfully received product details
-							JSONArray productObj = json
+							JSONArray tugasObj = json
 									.getJSONArray(TAG_TUGAS); // JSON Array
 							
 							// get first product object from JSON Array
-							JSONObject product = productObj.getJSONObject(0);
+							JSONObject tugas= tugasObj.getJSONObject(0);
 
 							// product with this pid found
 							// Edit Text
-							txtJudul = (TextView) findViewById(R.id.judul);
-							txtDeskripsi = (TextView) findViewById(R.id.deskripsi);
-							tanggalMulai= (TextView) findViewById(R.id.tanggalmulai);
-							tanggalSelesai= (TextView) findViewById(R.id.tanggalselesai);
-							jawaban= (EditText) findViewById(R.id.jawaban);
+							judul=tugas.getString("judul");
+							deskripsi=tugas.getString("deskripsi");
+							deskripsi=tugas.getString("deskripsi");
+							tgl_mulai=tugas.getString("tgl_mulai");
+							tgl_selesai=tugas.getString("tgl_selesai");
 
 							// display product data in EditText
-							txtJudul.setText(product.getString("judul"));
-							txtDeskripsi.setText(product.getString("deskripsi"));
-							tanggalMulai.setText("Tanggal mulai: "+product.getString("tgl_mulai"));
-							tanggalSelesai.setText("Tanggal selesai: "+product.getString("tgl_selesai"));
+//							txtJudul.setText(product.getString("judul"));
+	//						txtDeskripsi.setText(product.getString("deskripsi"));
+		//					tanggalMulai.setText("Tanggal mulai: "+product.getString("tgl_mulai"));
+			//				tanggalSelesai.setText("Tanggal selesai: "+product.getString("tgl_selesai"));
 
 						}else{
 							// product with pid not found
@@ -156,8 +163,8 @@ public class EditTugas extends Activity {
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
-				}
-			});
+				//}
+			//});
 
 			return null;
 		}
@@ -167,6 +174,19 @@ public class EditTugas extends Activity {
 		 * After completing background task Dismiss the progress dialog
 		 * **/
 		protected void onPostExecute(String file_url) {
+			
+			txtJudul = (TextView) findViewById(R.id.judul);
+			txtDeskripsi = (TextView) findViewById(R.id.deskripsi);
+			tanggalMulai= (TextView) findViewById(R.id.tanggalmulai);
+			tanggalSelesai= (TextView) findViewById(R.id.tanggalselesai);
+			jawaban= (EditText) findViewById(R.id.jawaban);
+			
+			jawaban.setVisibility(1);
+			btnSave.setVisibility(1);
+			txtJudul.setText("("+id_matkul+")" +judul);
+			txtDeskripsi.setText(deskripsi);
+			tanggalMulai.setText("Tanggal mulai: "+tgl_mulai);
+			tanggalSelesai.setText("Tanggal selesai: "+tgl_selesai);
 			// dismiss the dialog once got all details
 			pDialog.dismiss();
 		}

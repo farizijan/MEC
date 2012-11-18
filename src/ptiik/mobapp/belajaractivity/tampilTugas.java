@@ -36,13 +36,15 @@ public class tampilTugas extends ListActivity {
 	ArrayList<HashMap<String, String>> ListTugas;
 
 	// url to get all products list
-	private static String url_all_products = "http://10.0.2.2/mec/get_all_tugas.php";
+	private static String url_all_products = "http://farizijan.com/mobapp/get_all_tugas.php";
 
 	// JSON Node names
 	private static final String TAG_SUCCESS = "success";
 	private static final String TAG_TUGAS = "tugas";
 	private static final String TAG_TUGASID = "id_tugas";
 	private static final String TAG_JUDUL = "judul";
+	private static final String TAG_ID = "tugas_id";
+	private static final String TAG_MATKUL = "matkul_id";
 
 	// products JSONArray
 	JSONArray tugas = null;
@@ -71,13 +73,16 @@ public class tampilTugas extends ListActivity {
 				// getting values from selected ListItem
 				String idTugas = ((TextView) view.findViewById(R.id.tugas_id)).getText()
 						.toString();
+				String idMatkul = ((TextView) view.findViewById(R.id.matkul_id)).getText()
+						.toString();
 
 				// Starting new intent
 				Intent in = new Intent(getApplicationContext(),
 						EditTugas.class);
 				// sending pid to next activity
 				in.putExtra(TAG_TUGASID, idTugas);
-				
+				in.putExtra("id_matkul", idMatkul);
+				Log.d("Tugas Details", idTugas+", "+ idMatkul);
 				// starting new activity and expecting some response back
 				startActivityForResult(in, 100);
 			}
@@ -146,13 +151,15 @@ public class tampilTugas extends ListActivity {
 
 						// Storing each json item in variable
 						String id = c.getString(TAG_TUGASID);
+						String id_matkul = c.getString("id_matkul");
 						String judul = c.getString("id_matkul")+" - "+c.getString(TAG_JUDUL);
-
+						Log.d("Tugas Details", id+", "+id_matkul);
 						// creating new HashMap
 						HashMap<String, String> map = new HashMap<String, String>();
 
 						// adding each child node to HashMap key => value
-						map.put(TAG_TUGASID, id);
+						map.put(TAG_ID, id);
+						map.put(TAG_MATKUL, id_matkul);
 						map.put(TAG_JUDUL, judul);
 
 						// adding HashList to ArrayList
@@ -196,9 +203,9 @@ public class tampilTugas extends ListActivity {
 					 * */
 					ListAdapter adapter = new SimpleAdapter(
 							tampilTugas.this, ListTugas,
-							R.layout.list_item, new String[] { TAG_TUGASID,
-									TAG_JUDUL},
-							new int[] { R.id.tugas_id, R.id.judul });
+							R.layout.list_item, new String[] { TAG_ID,
+									TAG_JUDUL,TAG_MATKUL},
+							new int[] { R.id.tugas_id, R.id.judul, R.id.matkul_id });
 					// updating listview
 					setListAdapter(adapter);
 				}

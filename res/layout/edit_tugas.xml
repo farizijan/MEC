@@ -8,36 +8,38 @@
         android:id="@+id/judul"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Large Text"
+        
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
         android:id="@+id/deskripsi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Medium Text"
+        
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/tanggalmulai"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Small Text"
+        
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
         android:id="@+id/tanggalselesai"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Small Text"
+        
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <EditText
         android:id="@+id/jawaban"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
+        android:hint="tuliskan jawaban disini"
         android:ems="10"
-        android:inputType="textMultiLine" >
+        android:inputType="textMultiLine"
+        android:visibility="invisible" >
 
         <requestFocus />
     </EditText>
@@ -46,6 +48,7 @@
         android:id="@+id/submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Submit" />
+        android:text="Submit"
+        android:visibility="invisible" />
 
 </LinearLayout>
