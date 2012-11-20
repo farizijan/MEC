@@ -38,17 +38,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="36dp"
         android:textSize="20dp"
-        android:text="HARI" />
-
-    <Button
-        android:id="@+id/Button01"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tugas_button"
-        android:layout_below="@+id/tugas_button"
-        android:onClick="tampilNotif"
-        android:layout_marginTop="15dp"
-        android:text="Notifikasi" />
+        android:text="Main Menu" />
 
     <Button
         android:id="@+id/exit_button"

@@ -61,7 +61,7 @@ public class MainMenu extends Activity implements OnClickListener {
         // while developing the app, then uncomment it when it's ready.
         GCMRegistrar.checkManifest(this);
         //setContentView(R.layout.main_menu);
-        hr = (TextView) findViewById(R.id.Hari);
+        //hr = (TextView) findViewById(R.id.Hari);
         registerReceiver(mHandleMessageReceiver,
                 new IntentFilter(DISPLAY_MESSAGE_ACTION));
         final String regId = GCMRegistrar.getRegistrationId(this);
@@ -80,11 +80,16 @@ public class MainMenu extends Activity implements OnClickListener {
                 // hence the use of AsyncTask instead of a raw thread.
                 final Context context = this;
                 mRegisterTask = new AsyncTask<Void, Void, Void>() {
-                	private ProgressDialog dialog;
+                	private ProgressDialog pDialog;
                 	protected Context applicationContext;
                 	@Override
                 	protected void onPreExecute() {
-        		            this.dialog = ProgressDialog.show(applicationContext, "Login Process", "Please Wait...", true);
+                		super.onPreExecute();
+            			pDialog = new ProgressDialog(MainMenu.this);
+            			pDialog.setMessage("Registering device. Please wait...");
+            			pDialog.setIndeterminate(false);
+            			pDialog.setCancelable(false);
+            			pDialog.show();
        		        }
 
                     @Override
@@ -106,6 +111,7 @@ public class MainMenu extends Activity implements OnClickListener {
                     @Override
                     protected void onPostExecute(Void result) {
                         mRegisterTask = null;
+                        pDialog.dismiss();
                     }
 
                 };
@@ -119,11 +125,11 @@ public class MainMenu extends Activity implements OnClickListener {
         logoutButton.setOnClickListener(this);
         View exitButton=findViewById(R.id.exit_button);
         exitButton.setOnClickListener(this);
-        View jadwalButton=findViewById(R.id.jadwal_button);
+        /*View jadwalButton=findViewById(R.id.jadwal_button);
         jadwalButton.setOnClickListener(this);
         
         bv = (TextView) findViewById(R.id.jadwal_button);
-        hr = (TextView) findViewById(R.id.Hari);
+        hr = (TextView) findViewById(R.id.Hari);*/
         //registerForContextMenu((View) findViewById(R.id.jadwal_button));
     }
 
@@ -184,20 +190,20 @@ public class MainMenu extends Activity implements OnClickListener {
 	public void onCreateContextMenu(ContextMenu menu, View v,
 	ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
-		if(v.getId() == R.id.jadwal_button) {
+		//if(v.getId() == R.id.jadwal_button) {
 			/*SubMenu textMenu = menu.addSubMenu("Change Text");
 			textMenu.add(0, ID_TEXT1, 0, choices[0]);
 			textMenu.add(0, ID_TEXT2, 0, choices[1]);
 			textMenu.add(0, ID_TEXT3, 0, choices[2]);*/
-			menu.add(0, ID_SENIN, 0, "SENIN");
-			menu.add(0, ID_SELASA, 0, "SELASA");
-			menu.add(0, ID_RABU, 0, "RABU");
-			menu.add(0, ID_KAMIS, 0, "KAMIS");
-			menu.add(0, ID_JUMAT, 0, "JUMAT");
-			menu.add(0, ID_SABTU, 0, "SABTU");
-			menu.add(0, ID_DEFAULT, 0, "MINGGU");
+			//menu.add(0, ID_SENIN, 0, "SENIN");
+			//menu.add(0, ID_SELASA, 0, "SELASA");
+			//menu.add(0, ID_RABU, 0, "RABU");
+			//menu.add(0, ID_KAMIS, 0, "KAMIS");
+			//menu.add(0, ID_JUMAT, 0, "JUMAT");
+			//menu.add(0, ID_SABTU, 0, "SABTU");
+			//menu.add(0, ID_DEFAULT, 0, "MINGGU");
 			
-		}
+		//}
 	}
 
 	@Override

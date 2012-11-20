@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class EditTugas extends Activity {
 
@@ -47,7 +48,7 @@ public class EditTugas extends Activity {
 	private static final String url_tugas_detail = "http://farizijan.com/mobapp/get_tugas_details.php";
 
 	// url to update product
-	//private static final String url_update_product = "http://10.0.2.2/androWS/android_connect/update_product.php";
+	private static final String url_submit_tugas = "http://farizijan.com/mobapp/update_tugas.php";
 	
 	// url to delete product
 	//private static final String url_delete_product = "http://10.0.2.2/androWS/android_connect/delete_product.php";
@@ -64,7 +65,11 @@ public class EditTugas extends Activity {
 
 		// save button
 		btnSave = (Button) findViewById(R.id.submit);
-		
+		txtJudul = (TextView) findViewById(R.id.judul);
+		txtDeskripsi = (TextView) findViewById(R.id.deskripsi);
+		tanggalMulai= (TextView) findViewById(R.id.tanggalmulai);
+		tanggalSelesai= (TextView) findViewById(R.id.tanggalselesai);
+		jawaban= (EditText) findViewById(R.id.jawaban);
 
 		// getting product details from intent
 		Intent i = getIntent();
@@ -82,7 +87,7 @@ public class EditTugas extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// starting background task to update product
-				//new SubmitTugas().execute();
+				new SubmitTugas().execute();
 			}
 		});
 
@@ -175,11 +180,7 @@ public class EditTugas extends Activity {
 		 * **/
 		protected void onPostExecute(String file_url) {
 			
-			txtJudul = (TextView) findViewById(R.id.judul);
-			txtDeskripsi = (TextView) findViewById(R.id.deskripsi);
-			tanggalMulai= (TextView) findViewById(R.id.tanggalmulai);
-			tanggalSelesai= (TextView) findViewById(R.id.tanggalselesai);
-			jawaban= (EditText) findViewById(R.id.jawaban);
+			
 			
 			jawaban.setVisibility(1);
 			btnSave.setVisibility(1);
@@ -191,59 +192,65 @@ public class EditTugas extends Activity {
 			pDialog.dismiss();
 		}
 	}
-/*
-	*//**
+
+	/**
 	 * Background Async Task to  Save product Details
-	 * *//*
+	 * */
 	class SubmitTugas extends AsyncTask<String, String, String> {
 
-		*//**
+		/**
 		 * Before starting background thread Show Progress Dialog
-		 * *//*
+		 * */
+		int success;
+		
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
 			pDialog = new ProgressDialog(EditTugas.this);
-			pDialog.setMessage("Saving tugas ...");
+			pDialog.setMessage("Submit tugas ...");
 			pDialog.setIndeterminate(false);
 			pDialog.setCancelable(true);
 			pDialog.show();
 		}
 
-		*//**
+		/**
 		 * Saving product
-		 * *//*
+		 * */
 		protected String doInBackground(String... args) {
 
 			// getting updated data from EditTexts
-			String jawaban = jawaban.getText().toString();
+			String answer= jawaban.getText().toString();
 			
 
 			// Building Parameters
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair(TAG_PID, pid));
-			params.add(new BasicNameValuePair(TAG_NAME, name));
-			params.add(new BasicNameValuePair(TAG_PRICE, price));
-			params.add(new BasicNameValuePair(TAG_DESCRIPTION, description));
+			params.add(new BasicNameValuePair("id_tugas", id_tugas));
+			params.add(new BasicNameValuePair("id_matkul", id_matkul));
+			params.add(new BasicNameValuePair("jawaban", answer));
+			params.add(new BasicNameValuePair("username", Login.username));
 
 			// sending modified data through http request
 			// Notice that update product url accepts POST method
-			JSONObject json = jsonParser.makeHttpRequest(url_update_product,
-					"POST", params);
-
+			JSONObject json1 = jsonParser.makeHttpRequest(url_submit_tugas,
+					"GET", params);
+			Log.d("Submit Tugas"+id_matkul,"ID_TUGAS:"+id_tugas+", ID_MATKUL: "+id_matkul+", Jawaban: "+jawaban+", username: "+Login.username);
 			// check json success tag
 			try {
-				int success = json.getInt(TAG_SUCCESS);
+				 success = json1.getInt(TAG_SUCCESS);
 				
 				if (success == 1) {
 					// successfully updated
-					Intent i = getIntent();
-					// send result code 100 to notify about product update
-					setResult(100, i);
+					//Intent i = getIntent();
+					Intent i = new Intent(getApplicationContext(),tampilTugas.class);
 					finish();
+					startActivity(i);
+					// send result code 100 to notify about product update
+					//setResult(100, i);
+					
 				} else {
 					// failed to update product
 				}
+				Log.d("Submit Response", json1.toString());
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -252,19 +259,25 @@ public class EditTugas extends Activity {
 		}
 
 
-		*//**
+		/**
 		 * After completing background task Dismiss the progress dialog
-		 * **//*
+		 * **/
 		protected void onPostExecute(String file_url) {
 			// dismiss the dialog once product uupdated
 			pDialog.dismiss();
+			if(success==1){
+				Toast.makeText(getApplicationContext(), "Submit tugas berhasil!", Toast.LENGTH_LONG).show();
+			}
+			else{
+				Toast.makeText(getApplicationContext(), "Submit tugas gagal!", Toast.LENGTH_LONG).show();
+			}
 		}
 	}
 
-	*//*****************************************************************
+	/*****************************************************************
 	 * Background Async Task to Delete Product
-	 * *//*
-	class DeleteProduct extends AsyncTask<String, String, String> {
+	 * */
+/*	class DeleteProduct extends AsyncTask<String, String, String> {
 
 		*//**
 		 * Before starting background thread Show Progress Dialog
