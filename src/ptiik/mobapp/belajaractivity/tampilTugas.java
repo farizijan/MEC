@@ -15,6 +15,7 @@ import ptiik.mobapp.belajaractivity.R;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,12 +26,13 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class tampilTugas extends ListActivity {
 
 	// Progress Dialog
 	private ProgressDialog pDialog;
-
+	int success=0;
 	// Creating JSON Parser object
 	JSONParser jParser = new JSONParser();
 
@@ -130,64 +132,59 @@ public class tampilTugas extends ListActivity {
 		 * */
 		protected String doInBackground(String... args) {
 			// Building Parameters
+			SharedPreferences prefs=getSharedPreferences("mec-data", 0);
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("username", Login.username));
+			params.add(new BasicNameValuePair("username", prefs.getString("username", null)));
 			// getting JSON string from URL
 			JSONObject json = jParser.makeHttpRequest(url_all_products, "GET", params);
 			
-			// Check your log cat for JSON reponse
-			Log.d("All Products: ", json.toString());
-
-			try {
-				// Checking for SUCCESS TAG
-				int success = json.getInt(TAG_SUCCESS);
-
-				if (success == 1) {
-					// products found
-					// Getting Array of Products
-					tugas = json.getJSONArray(TAG_TUGAS);
-
-					// looping through All Products
-					for (int i = 0; i < tugas.length(); i++) {
-						JSONObject c = tugas.getJSONObject(i);
-
-						// Storing each json item in variable
-						String id = c.getString(TAG_TUGASID);
-						String id_matkul = c.getString("id_matkul");
-						String judul = c.getString("id_matkul")+" - "+c.getString(TAG_JUDUL);
-						Log.d("Tugas Details", id+", "+id_matkul);
-						// creating new HashMap
+			if(json!=null){
+				// Check your log cat for JSON reponse
+				Log.d("All Products: ", json.toString());
+	
+				try {
+					// Checking for SUCCESS TAG
+					success = json.getInt(TAG_SUCCESS);
+	
+					if (success == 1) {
+						// products found
+						// Getting Array of Products
+						tugas = json.getJSONArray(TAG_TUGAS);
+	
+						// looping through All Products
+						for (int i = 0; i < tugas.length(); i++) {
+							JSONObject c = tugas.getJSONObject(i);
+	
+							// Storing each json item in variable
+							String id = c.getString(TAG_TUGASID);
+							String id_matkul = c.getString("id_matkul");
+							String judul = c.getString("id_matkul")+" - "+c.getString(TAG_JUDUL);
+							Log.d("Tugas Details", id+", "+id_matkul);
+							// creating new HashMap
+							HashMap<String, String> map = new HashMap<String, String>();
+	
+							// adding each child node to HashMap key => value
+							map.put(TAG_ID, id);
+							map.put(TAG_MATKUL, id_matkul);
+							map.put(TAG_JUDUL, judul);
+	
+							// adding HashList to ArrayList
+							ListTugas.add(map);
+						}
+					} else {
+						
 						HashMap<String, String> map = new HashMap<String, String>();
-
 						// adding each child node to HashMap key => value
-						map.put(TAG_ID, id);
-						map.put(TAG_MATKUL, id_matkul);
-						map.put(TAG_JUDUL, judul);
-
+						map.put(TAG_TUGASID, "empty");
+						map.put(TAG_JUDUL, "Tidak Ada Tugas");
+	
 						// adding HashList to ArrayList
 						ListTugas.add(map);
 					}
-				} else {
-					// no products found
-					// Launch Add New product Activity
-					/*Intent i = new Intent(getApplicationContext(),
-							NewProductActivity.class);
-					// Closing all previous activities
-					i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					startActivity(i);*/
-					
-					HashMap<String, String> map = new HashMap<String, String>();
-					// adding each child node to HashMap key => value
-					map.put(TAG_TUGASID, "empty");
-					map.put(TAG_JUDUL, "Tidak Ada Tugas");
-
-					// adding HashList to ArrayList
-					ListTugas.add(map);
+				} catch (JSONException e) {
+					e.printStackTrace();
 				}
-			} catch (JSONException e) {
-				e.printStackTrace();
 			}
-
 			return null;
 		}
 
@@ -197,22 +194,27 @@ public class tampilTugas extends ListActivity {
 		protected void onPostExecute(String file_url) {
 			// dismiss the dialog after getting all products
 			pDialog.dismiss();
-			// updating UI from Background Thread
-			runOnUiThread(new Runnable() {
-				public void run() {
-					/**
-					 * Updating parsed JSON data into ListView
-					 * */
-					ListAdapter adapter = new SimpleAdapter(
-							tampilTugas.this, ListTugas,
-							R.layout.list_item, new String[] { TAG_ID,
-									TAG_JUDUL,TAG_MATKUL},
-							new int[] { R.id.tugas_id, R.id.judul, R.id.matkul_id });
-					// updating listview
-					setListAdapter(adapter);
-				}
-			});
-
+			if (success == 1) {
+				// updating UI from Background Thread
+				runOnUiThread(new Runnable() {
+					public void run() {
+						/**
+						 * Updating parsed JSON data into ListView
+						 * */
+						ListAdapter adapter = new SimpleAdapter(
+								tampilTugas.this, ListTugas,
+								R.layout.list_item, new String[] { TAG_ID,
+										TAG_JUDUL,TAG_MATKUL},
+								new int[] { R.id.tugas_id, R.id.judul, R.id.matkul_id });
+						// updating listview
+						setListAdapter(adapter);
+					}
+				});
+			}
+			else {
+				Toast.makeText(getApplicationContext(), "Cek koneksi internet Anda!", Toast.LENGTH_LONG).show();
+				finish();
+			}
 		}
 
 	}

@@ -50,5 +50,13 @@
         android:layout_height="wrap_content"
         android:text="Submit"
         android:visibility="invisible" />
+    
+    <Button
+        android:id="@+id/setReminder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set Reminder"
+        android:visibility="invisible"
+        android:layout_marginLeft="45pt"/>
 
 </LinearLayout>

@@ -19,6 +19,8 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.text.InputFilter.LengthFilter;
 import android.util.Log;
 import android.view.Menu;
@@ -31,14 +33,29 @@ public class Login extends Activity implements OnClickListener {
 
 	private static final String url_login = "http://farizijan.com/mobapp/get_user.php";
 	JSONParser jsonParser = new JSONParser();
-	
+	SharedPreferences login;
+	public static String username;
+    public static String password;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        
+        login=getSharedPreferences("mec-data", 0);
         View loginButton=findViewById(R.id.button1);
         loginButton.setOnClickListener(this);
+        
+        username=login.getString("username", null);
+        password=login.getString("password", null);
+        Log.d("Shr-Login", "username: "+username);
+        Log.d("Shr-Login", "password: "+password);
+        
+        if(username!=null){
+        	Log.d("Shr-Login", "is not null");
+        	Intent i = new Intent(getApplicationContext(), MainMenu.class);
+			startActivity(i);
+			finish();
+        }
+        Log.d("Shr-Login", "is null");
     }
 
     @Override
@@ -46,8 +63,8 @@ public class Login extends Activity implements OnClickListener {
         getMenuInflater().inflate(R.menu.activity_login, menu);
         return true;
     }
-    public static String username;
-    public static String password;
+    
+    
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -55,38 +72,30 @@ public class Login extends Activity implements OnClickListener {
 		String vUname=uname.getText().toString();
 		EditText pass=(EditText)findViewById(R.id.editText2);
 		String vpass=pass.getText().toString();
+		
 		switch (v.getId()) {
 		case R.id.button1:
-			//if("b".equals(vpass)){
-				//finish();
-				//Intent i = new Intent(this, MainMenu.class );
-				//startActivity(i);
 				username=vUname;
 				password=vpass;
 				new LoginProcess().execute();
-			//}
-			//else {
-				//Intent i = new Intent(this, LoginAlert.class );
-				//startActivity(i);
-			//}
-			//break;
     	}
 	}
 	
 	class LoginProcess extends AsyncTask<String, String, String> {
 
 		ProgressDialog pDialog;
-		int success;
+		int success=0;
 		/**
 		 * Before starting background thread Show Progress Dialog
 		 * */
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
+			//menampilkan proses
 			 pDialog = new ProgressDialog(Login.this);
 			pDialog.setMessage("Login...");
 			pDialog.setIndeterminate(false);
-			pDialog.setCancelable(true);
+			pDialog.setCancelable(false);
 			pDialog.show();
 		}
 
@@ -108,20 +117,19 @@ public class Login extends Activity implements OnClickListener {
 							url_login, "GET", params2);
 
 					// check your log for json response
-					Log.d("Login Details", json.toString());
 					
+			if(json!=null){//jika koneksi internet ada atau tidak ada masalah koneksi ke server		
+				Log.d("Login Details", json.toString());
 					try {
-						
-						
 						// json success tag
 						success = json.getInt("success");
 						
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
-				//}
-			//});
-
+			}//end if
+			else success=2;
+			
 			return null;
 		}
 
@@ -134,12 +142,24 @@ public class Login extends Activity implements OnClickListener {
 			// dismiss the dialog once got all details
 			pDialog.dismiss();
 			if (success == 1) {
+				Editor tmpEdit=login.edit();
+				tmpEdit.putString("username", username);
+				tmpEdit.putString("password", password);
+				tmpEdit.commit();
+				
+				Log.d("Shr-Login 1", "username: "+username);
+		        Log.d("Shr-Login 1", "password: "+password);
+		        
 				Intent i = new Intent(getApplicationContext(), MainMenu.class);
 				startActivity(i);
 				finish();
-			}else{
+			}else if (success == 2) {
+				Toast.makeText(getApplicationContext(), "Cek koneksi internet Anda!", Toast.LENGTH_LONG).show();
+			}
+			else{
 				Toast.makeText(getApplicationContext(), "Username atau password salah!", Toast.LENGTH_LONG).show();
 			}
 		}
 	}
+
 }

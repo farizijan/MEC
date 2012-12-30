@@ -67,10 +67,13 @@ public class JSONParser {
 
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
+			jObj = null;
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
+			jObj = null;
 		} catch (IOException e) {
 			e.printStackTrace();
+			jObj = null;
 		}
 
 		try {
@@ -85,6 +88,7 @@ public class JSONParser {
 			json = sb.toString();
 		} catch (Exception e) {
 			Log.e("Buffer Error", "Error converting result " + e.toString());
+			jObj = null;
 		}
 
 		// try parse the string to a JSON object
@@ -92,6 +96,7 @@ public class JSONParser {
 			jObj = new JSONObject(json);
 		} catch (JSONException e) {
 			Log.e("JSON Parser", "Error parsing data " + e.toString());
+			jObj = null;
 		}
 
 		// return JSON String

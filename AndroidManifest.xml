@@ -44,6 +44,14 @@
             android:label="@string/title_activity_main_menu" >
         </activity>
         <activity
+            android:name=".SetAlarm"
+            android:label="Set Alarm" >
+        </activity>
+        <activity
+            android:name=".DisplayAlarmNotification"
+            android:label="Notification" >
+        </activity>
+        <activity
             android:name=".tampilTugas"
             android:label="Tampil Tugas" >
         </activity>

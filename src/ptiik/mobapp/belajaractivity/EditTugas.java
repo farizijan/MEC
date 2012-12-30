@@ -30,6 +30,7 @@ public class EditTugas extends Activity {
 	EditText jawaban;
 	Button btnSave;
 	Button btnDelete;
+	Button btnReminder;
 
 	String id_tugas;
 	String id_matkul;
@@ -70,6 +71,7 @@ public class EditTugas extends Activity {
 		tanggalMulai= (TextView) findViewById(R.id.tanggalmulai);
 		tanggalSelesai= (TextView) findViewById(R.id.tanggalselesai);
 		jawaban= (EditText) findViewById(R.id.jawaban);
+		btnReminder=(Button)findViewById(R.id.setReminder);
 
 		// getting product details from intent
 		Intent i = getIntent();
@@ -88,6 +90,20 @@ public class EditTugas extends Activity {
 			public void onClick(View arg0) {
 				// starting background task to update product
 				new SubmitTugas().execute();
+			}
+		});
+		btnReminder.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// starting background task to update product
+				//new SubmitTugas().execute();
+				Intent reminder = new Intent(getApplicationContext(), SetAlarm.class );
+				//mengirim nilai ke setAlarm.java
+				reminder.putExtra("idMatkul",id_matkul);
+				reminder.putExtra("judulMatkul",judul);
+				reminder.putExtra("deskripsiMatkul",deskripsi);
+				startActivity(reminder);
 			}
 		});
 
@@ -148,28 +164,18 @@ public class EditTugas extends Activity {
 							// get first product object from JSON Array
 							JSONObject tugas= tugasObj.getJSONObject(0);
 
-							// product with this pid found
+							
 							// Edit Text
 							judul=tugas.getString("judul");
 							deskripsi=tugas.getString("deskripsi");
-							deskripsi=tugas.getString("deskripsi");
 							tgl_mulai=tugas.getString("tgl_mulai");
 							tgl_selesai=tugas.getString("tgl_selesai");
-
-							// display product data in EditText
-//							txtJudul.setText(product.getString("judul"));
-	//						txtDeskripsi.setText(product.getString("deskripsi"));
-		//					tanggalMulai.setText("Tanggal mulai: "+product.getString("tgl_mulai"));
-			//				tanggalSelesai.setText("Tanggal selesai: "+product.getString("tgl_selesai"));
-
 						}else{
-							// product with pid not found
+
 						}
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
-				//}
-			//});
 
 			return null;
 		}
@@ -184,6 +190,7 @@ public class EditTugas extends Activity {
 			
 			jawaban.setVisibility(1);
 			btnSave.setVisibility(1);
+			btnReminder.setVisibility(1);
 			txtJudul.setText("("+id_matkul+")" +judul);
 			txtDeskripsi.setText(deskripsi);
 			tanggalMulai.setText("Tanggal mulai: "+tgl_mulai);
@@ -273,69 +280,4 @@ public class EditTugas extends Activity {
 			}
 		}
 	}
-
-	/*****************************************************************
-	 * Background Async Task to Delete Product
-	 * */
-/*	class DeleteProduct extends AsyncTask<String, String, String> {
-
-		*//**
-		 * Before starting background thread Show Progress Dialog
-		 * *//*
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			pDialog = new ProgressDialog(EditTugas.this);
-			pDialog.setMessage("Deleting Product...");
-			pDialog.setIndeterminate(false);
-			pDialog.setCancelable(true);
-			pDialog.show();
-		}
-
-		*//**
-		 * Deleting product
-		 * *//*
-		protected String doInBackground(String... args) {
-
-			// Check for success tag
-			int success;
-			try {
-				// Building Parameters
-				List<NameValuePair> params = new ArrayList<NameValuePair>();
-				params.add(new BasicNameValuePair("pid", pid));
-
-				// getting product details by making HTTP request
-				JSONObject json = jsonParser.makeHttpRequest(
-						url_delete_product, "POST", params);
-
-				// check your log for json response
-				Log.d("Delete Product", json.toString());
-				
-				// json success tag
-				success = json.getInt(TAG_SUCCESS);
-				if (success == 1) {
-					// product successfully deleted
-					// notify previous activity by sending code 100
-					Intent i = getIntent();
-					// send result code 100 to notify about product deletion
-					setResult(100, i);
-					finish();
-				}
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-
-			return null;
-		}
-
-		*//**
-		 * After completing background task Dismiss the progress dialog
-		 * **//*
-		protected void onPostExecute(String file_url) {
-			// dismiss the dialog once product deleted
-			pDialog.dismiss();
-
-		}
-
-	}*/
 }

@@ -22,6 +22,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
@@ -36,22 +37,18 @@ import static ptiik.mobapp.belajaractivity.CommonUtilities.EXTRA_MESSAGE;
 
 public class MainMenu extends Activity implements OnClickListener {
 
-	private final int MENU_ADD=1, MENU_SEND=2, MENU_DEL=3;
-	private final int GROUP_DEFAULT=0, GROUP_DEL=1;
-	private final int ID_DEFAULT=0;
-	private final int ID_TEXT1=1, ID_TEXT2=2, ID_TEXT3=3;
-	private final int ID_SENIN=1, ID_SELASA=2, ID_RABU=3, ID_KAMIS=4, ID_JUMAT=5, ID_SABTU=6;
-	private String[] choices = {"Press Me", "Try Again", "Change Me"};
-	private static int itemNum=0;
-	private static TextView bv;
 	private static TextView hr;
+	public static int alarmId=0;
+	SharedPreferences login;
     AsyncTask<Void, Void, Void> mRegisterTask;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_menu);
-        
+        login=getSharedPreferences("mec-data", 0);
+        Log.d("Shr-Login", "username: "+ login.getString("username", ""));
+        Log.d("Shr-Login", "password: "+ login.getString("password", ""));
         //GCM
         checkNotNull(SERVER_URL, "SERVER_URL");
         checkNotNull(SENDER_ID, "SENDER_ID");
@@ -119,6 +116,8 @@ public class MainMenu extends Activity implements OnClickListener {
             }
         }
         //END GCM
+        View jadwalButton=findViewById(R.id.jadwal_button);
+        jadwalButton.setOnClickListener(this);
         View tugasButton=findViewById(R.id.tugas_button);
         tugasButton.setOnClickListener(this);
         View logoutButton=findViewById(R.id.logout_button);
@@ -144,11 +143,16 @@ public class MainMenu extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
+		case R.id.jadwal_button:
+			Intent k = new Intent(this, SetAlarm.class );
+			startActivity(k);
+			break;
 		case R.id.tugas_button:
 			Intent i = new Intent(this, tampilTugas.class );
 			startActivity(i);
 			break;
 		case R.id.logout_button:
+			login.edit().clear().commit();
 			finish();
 			Intent logout = new Intent(this, Login.class );
 			startActivity(logout);
@@ -162,94 +166,14 @@ public class MainMenu extends Activity implements OnClickListener {
 	//----------------BARU
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		if(itemNum>0) {
-			menu.setGroupVisible(GROUP_DEL, true);
-		} else {
-			menu.setGroupVisible(GROUP_DEL, false);
-		}
-		return super.onPrepareOptionsMenu(menu);
+		return true;
 	}
-	
+		
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch(item.getItemId()) {
-			case MENU_ADD:
-				create_note();
-				return true;
-			case MENU_SEND:
-				send_note();
-				return true;
-			case MENU_DEL:
-				delete_note();
-				return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 	
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-	ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
-		//if(v.getId() == R.id.jadwal_button) {
-			/*SubMenu textMenu = menu.addSubMenu("Change Text");
-			textMenu.add(0, ID_TEXT1, 0, choices[0]);
-			textMenu.add(0, ID_TEXT2, 0, choices[1]);
-			textMenu.add(0, ID_TEXT3, 0, choices[2]);*/
-			//menu.add(0, ID_SENIN, 0, "SENIN");
-			//menu.add(0, ID_SELASA, 0, "SELASA");
-			//menu.add(0, ID_RABU, 0, "RABU");
-			//menu.add(0, ID_KAMIS, 0, "KAMIS");
-			//menu.add(0, ID_JUMAT, 0, "JUMAT");
-			//menu.add(0, ID_SABTU, 0, "SABTU");
-			//menu.add(0, ID_DEFAULT, 0, "MINGGU");
-			
-		//}
 	}
 
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		switch(item.getItemId()) {
-			case ID_DEFAULT:
-				hr.setText("Hari");
-				return true;
-			/*case ID_TEXT1:
-			case ID_TEXT2:
-			case ID_TEXT3:
-				bv.setText(choices[item.getItemId()-1]);
-				return true;*/
-			case ID_SENIN:
-				hr.setText("SENIN");
-				return true;
-			case ID_SELASA:
-				hr.setText("SELASA");
-				return true;
-			case ID_RABU:
-				hr.setText("RABU");
-				return true;
-			case ID_KAMIS:
-				hr.setText("KAMIS");
-				return true;
-			case ID_JUMAT:
-				hr.setText("JUMAT");
-				return true;
-			case ID_SABTU:
-				hr.setText("SABTU");
-				return true;
-		}
-		return super.onContextItemSelected(item);
-	}
-	
-	void create_note() { // mock code to create note
-		itemNum++;
-	}
-	void send_note() { // mock code to send note
-		Toast.makeText(this, "Item: "+itemNum,
-		Toast.LENGTH_SHORT).show();
-	}
-	void delete_note() { // mock code to delete note
-		itemNum--;
-	}
-	
 	
 	//NOTIFICATION
 	public void tampilNotif(View view){
