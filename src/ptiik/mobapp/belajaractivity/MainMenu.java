@@ -152,6 +152,12 @@ public class MainMenu extends Activity implements OnClickListener {
 			startActivity(i);
 			break;
 		case R.id.logout_button:
+			for(int a=0;a<=login.getInt("alarmId", 0);a++){
+				Intent it = new Intent(getApplicationContext(),DisplayAlarmNotification.class);
+				//PendingIntent pintent=PendingIntent.
+				PendingIntent displayIntent = PendingIntent.getActivity(getBaseContext(), 0, it, a);
+				displayIntent.cancel();
+			}
 			login.edit().clear().commit();
 			finish();
 			Intent logout = new Intent(this, Login.class );
@@ -174,7 +180,7 @@ public class MainMenu extends Activity implements OnClickListener {
 	
 	}
 
-	
+	/*
 	//NOTIFICATION
 	public void tampilNotif(View view){
 		String ns = Context.NOTIFICATION_SERVICE;
@@ -199,7 +205,7 @@ public class MainMenu extends Activity implements OnClickListener {
 				
 	}
 	//END OF NOTIFICATION
-	
+	*/
 	//GCM
     @Override
     protected void onDestroy(){

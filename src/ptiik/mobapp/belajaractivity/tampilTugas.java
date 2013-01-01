@@ -33,6 +33,7 @@ public class tampilTugas extends ListActivity {
 	// Progress Dialog
 	private ProgressDialog pDialog;
 	int success=0;
+	String username;
 	// Creating JSON Parser object
 	JSONParser jParser = new JSONParser();
 
@@ -134,7 +135,9 @@ public class tampilTugas extends ListActivity {
 			// Building Parameters
 			SharedPreferences prefs=getSharedPreferences("mec-data", 0);
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("username", prefs.getString("username", null)));
+			username =prefs.getString("username", null);
+			
+			params.add(new BasicNameValuePair("username", username));
 			// getting JSON string from URL
 			JSONObject json = jParser.makeHttpRequest(url_all_products, "GET", params);
 			
@@ -194,6 +197,7 @@ public class tampilTugas extends ListActivity {
 		protected void onPostExecute(String file_url) {
 			// dismiss the dialog after getting all products
 			pDialog.dismiss();
+			if(username==null)finish();
 			if (success == 1) {
 				// updating UI from Background Thread
 				runOnUiThread(new Runnable() {
