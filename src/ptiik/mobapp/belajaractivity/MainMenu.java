@@ -4,6 +4,15 @@
  */
 package ptiik.mobapp.belajaractivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
@@ -38,6 +47,7 @@ import static ptiik.mobapp.belajaractivity.CommonUtilities.EXTRA_MESSAGE;
 public class MainMenu extends Activity implements OnClickListener {
 
 	private static TextView hr;
+	private ProgressDialog pDialog;
 	public static int alarmId=0;
 	SharedPreferences login;
     AsyncTask<Void, Void, Void> mRegisterTask;
@@ -158,6 +168,7 @@ public class MainMenu extends Activity implements OnClickListener {
 				PendingIntent displayIntent = PendingIntent.getActivity(getBaseContext(), 0, it, a);
 				displayIntent.cancel();
 			}
+			
 			login.edit().clear().commit();
 			finish();
 			Intent logout = new Intent(this, Login.class );
@@ -180,32 +191,6 @@ public class MainMenu extends Activity implements OnClickListener {
 	
 	}
 
-	/*
-	//NOTIFICATION
-	public void tampilNotif(View view){
-		String ns = Context.NOTIFICATION_SERVICE;
-		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
-		
-		int icon = R.drawable.ic_launcher;
-		CharSequence tickerText = "Tugas Baru";
-		long when = System.currentTimeMillis();
-	
-		Notification notification = new Notification(icon, tickerText, when);
-		notification.flags |= Notification.FLAG_AUTO_CANCEL;
-		Context context = getApplicationContext();
-		CharSequence contentTitle = "Pemberitahuan Tugas";
-		CharSequence contentText = "Mobile Application - Tugas 1";
-		Intent notificationIntent = new Intent(this, MainMenu.class);
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-		
-		notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
-		final int HELLO_ID = 1;
-	
-		mNotificationManager.notify(HELLO_ID, notification);
-				
-	}
-	//END OF NOTIFICATION
-	*/
 	//GCM
     @Override
     protected void onDestroy(){
@@ -234,5 +219,4 @@ public class MainMenu extends Activity implements OnClickListener {
         }
     };
 	//END GCM
-    
 }

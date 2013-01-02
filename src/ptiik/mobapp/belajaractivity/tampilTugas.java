@@ -32,7 +32,8 @@ public class tampilTugas extends ListActivity {
 
 	// Progress Dialog
 	private ProgressDialog pDialog;
-	int success=0;
+	public static int success=0;
+	
 	String username;
 	// Creating JSON Parser object
 	JSONParser jParser = new JSONParser();
@@ -216,8 +217,28 @@ public class tampilTugas extends ListActivity {
 					}
 				});
 			}
+			else if(success==2){
+				Toast.makeText(getApplicationContext(), "Unsupported Encoding", Toast.LENGTH_LONG).show();
+				finish();
+			}
+			else if(success==3){
+				Toast.makeText(getApplicationContext(), "Client Protocol Error", Toast.LENGTH_LONG).show();
+				finish();
+			}
+			else if(success==4){
+				Toast.makeText(getApplicationContext(), "IO Error", Toast.LENGTH_LONG).show();
+				finish();
+			}
+			else if(success==5){
+				Toast.makeText(getApplicationContext(), "Error converting result. Check your connection!", Toast.LENGTH_LONG).show();
+				finish();
+			}
+			else if(success==6){
+				Toast.makeText(getApplicationContext(), "Error parsing data. Check your connection!", Toast.LENGTH_LONG).show();
+				finish();
+			}
 			else {
-				Toast.makeText(getApplicationContext(), "Cek koneksi internet Anda!", Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(), "Tidak ada tugas!", Toast.LENGTH_LONG).show();
 				finish();
 			}
 		}

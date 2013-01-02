@@ -62,9 +62,11 @@ public final class ServerUtilities {
         String devId= tMgr.getDeviceId();
         Map<String, String> params = new HashMap<String, String>();
         //untuk ngirim pesan ke web
+        String mPhoneNumber = tMgr.getLine1Number();
         params.put("regId", regId);
         params.put("username", uname);
         params.put("device_id", devId);
+        params.put("phone_no", mPhoneNumber);
         long backoff = BACKOFF_MILLI_SECONDS + random.nextInt(1000);
         // Once GCM returns a registration id, we need to register it in the
         // demo server. As the server might be down, we will retry it a couple
