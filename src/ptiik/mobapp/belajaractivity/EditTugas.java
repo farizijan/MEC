@@ -1,5 +1,11 @@
 package ptiik.mobapp.belajaractivity;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,16 +18,34 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class EditTugas extends Activity {
+
+	HttpURLConnection connection = null;
+	DataOutputStream outputStream = null;
+	DataInputStream inputStream = null;
+	
+	String pathToOurFile = null;
+	String urlServer = "http://10.0.2.2/androidupload/index.php";
+	String lineEnd = "\r\n";
+	String twoHyphens = "--";
+	String boundary =  "*****";
+
+	int bytesRead, bytesAvailable, bufferSize;
+	byte[] buffer;
+	int maxBufferSize = 1*1024*1024;
 
 	TextView txtJudul;
 	TextView txtDeskripsi;
@@ -31,6 +55,7 @@ public class EditTugas extends Activity {
 	Button btnSave;
 	Button btnDelete;
 	Button btnReminder;
+	Button btnFile;
 
 	String id_tugas;
 	String id_matkul;
@@ -72,6 +97,7 @@ public class EditTugas extends Activity {
 		tanggalSelesai= (TextView) findViewById(R.id.tanggalselesai);
 		jawaban= (EditText) findViewById(R.id.jawaban);
 		btnReminder=(Button)findViewById(R.id.setReminder);
+		btnFile=(Button)findViewById(R.id.choosefile);
 
 		// getting product details from intent
 		Intent i = getIntent();
@@ -106,9 +132,57 @@ public class EditTugas extends Activity {
 				startActivity(reminder);
 			}
 		});
+		btnFile.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				Intent intent = new Intent();
+				intent.setType("image/*");
+				intent.setAction(Intent.ACTION_GET_CONTENT);
+				startActivityForResult(
+						Intent.createChooser(intent, "Select Picture"),
+						1);
+			}
+		});
 
 	}
 
+	
+	public String getPath(Uri uri) {
+		String siPath;
+		// 1:MEDIA GALLERY --- query from MediaStore.Images.Media.DATA
+		String[] projection = { MediaStore.Images.Media.DATA };
+		Cursor cursor = managedQuery(uri, projection, null, null, null);
+		if (cursor != null) {
+			int column_index = cursor
+					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+			cursor.moveToFirst();
+			siPath = cursor.getString(column_index);
+		} else {
+			siPath = null;
+		}
+
+		if (siPath == null) {
+			// 2:OI FILE Manager --- call method: uri.getPath()
+			siPath = uri.getPath();
+		}
+		return siPath;
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == RESULT_OK) {
+			if (requestCode == 1) {
+				Uri selectedImageUri = data.getData();
+				pathToOurFile = getPath(selectedImageUri);
+				
+				TextView tResponse = (TextView) findViewById(R.id.filelocation);
+		    	tResponse.append(pathToOurFile);
+			} 
+		}
+	}
+	
+	
 	/**
 	 * Background Async Task to Get complete product details
 	 * */
@@ -191,6 +265,7 @@ public class EditTugas extends Activity {
 			jawaban.setVisibility(1);
 			btnSave.setVisibility(1);
 			btnReminder.setVisibility(1);
+			btnFile.setVisibility(1);
 			txtJudul.setText("("+id_matkul+")" +judul);
 			txtDeskripsi.setText(deskripsi);
 			tanggalMulai.setText("Tanggal mulai: "+tgl_mulai);
@@ -228,40 +303,116 @@ public class EditTugas extends Activity {
 			// getting updated data from EditTexts
 			String answer= jawaban.getText().toString();
 			
-
-			// Building Parameters
-			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("id_tugas", id_tugas));
-			params.add(new BasicNameValuePair("id_matkul", id_matkul));
-			params.add(new BasicNameValuePair("jawaban", answer));
-			params.add(new BasicNameValuePair("username", Login.username));
-
-			// sending modified data through http request
-			// Notice that update product url accepts POST method
-			JSONObject json1 = jsonParser.makeHttpRequest(url_submit_tugas,
-					"GET", params);
-			Log.d("Submit Tugas"+id_matkul,"ID_TUGAS:"+id_tugas+", ID_MATKUL: "+id_matkul+", Jawaban: "+jawaban+", username: "+Login.username);
-			// check json success tag
-			try {
-				 success = json1.getInt(TAG_SUCCESS);
+			if(pathToOurFile!=null){
 				
-				if (success == 1) {
-					// successfully updated
-					//Intent i = getIntent();
-					Intent i = new Intent(getApplicationContext(),tampilTugas.class);
-					finish();
-					startActivity(i);
-					// send result code 100 to notify about product update
-					//setResult(100, i);
-					
-				} else {
-					// failed to update product
-				}
-				Log.d("Submit Response", json1.toString());
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
+				//UPLOAD FILE
+	
+		    	try
+		    	{
+		    	FileInputStream fileInputStream = new FileInputStream(new File(pathToOurFile) );
+	
+		    	URL url = new URL(url_submit_tugas);
+		    	connection = (HttpURLConnection) url.openConnection();
 
+		    	// Allow Inputs & Outputs
+		    	connection.setDoInput(true);
+		    	connection.setDoOutput(true);
+		    	connection.setUseCaches(false);
+
+		    	// Enable POST method
+		    	connection.setRequestMethod("POST");
+
+		    	connection.setRequestProperty("Connection", "Keep-Alive");
+		    	connection.setRequestProperty("Content-Type", "multipart/form-data;boundary="+boundary);
+		    	//connection.setRequestProperty("x-username", "farizijan");
+		    	outputStream = new DataOutputStream( connection.getOutputStream() );
+		    	
+		    	outputStream.writeBytes(twoHyphens + boundary + lineEnd);
+		    	outputStream.writeBytes("Content-Disposition: form-data; name=\"username\""+ lineEnd);
+		    	outputStream.writeBytes(lineEnd);
+		    	outputStream.writeBytes(Login.username);
+		    	outputStream.writeBytes(lineEnd);
+		    	outputStream.flush();
+		    	
+		    	outputStream.writeBytes(twoHyphens + boundary + lineEnd);
+		    	outputStream.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\";filename=\"" + pathToOurFile +"\"" + lineEnd);
+		    	outputStream.writeBytes(lineEnd);
+		    	
+		    	
+		    	
+		    	
+		    	bytesAvailable = fileInputStream.available();
+		    	bufferSize = Math.min(bytesAvailable, maxBufferSize);
+		    	buffer = new byte[bufferSize];
+
+		    	// Read file
+		    	bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+		    	while (bytesRead > 0)
+		    	{
+		    	outputStream.write(buffer, 0, bufferSize);
+		    	bytesAvailable = fileInputStream.available();
+		    	bufferSize = Math.min(bytesAvailable, maxBufferSize);
+		    	bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+		    	}
+
+		    	outputStream.writeBytes(lineEnd);
+		    	outputStream.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+
+		    	// Responses from the server (code and message)
+		    	int serverResponseCode = connection.getResponseCode();
+		    	String serverResponseMessage = connection.getResponseMessage();
+		    	Log.d("response", serverResponseMessage);
+		    	if(serverResponseMessage.equals("OK")){
+		    			success=1;
+		    	}
+		    	fileInputStream.close();
+		    	outputStream.flush();
+		    	outputStream.close();
+		    	}
+		    	catch (Exception ex)
+		    	{
+		    	//Exception handling
+		    		ex.printStackTrace();
+		    	}
+				//END OF UPLOAD FILE
+			}
+			
+			else{
+	
+				// Building Parameters
+				List<NameValuePair> params = new ArrayList<NameValuePair>();
+				params.add(new BasicNameValuePair("id_tugas", id_tugas));
+				params.add(new BasicNameValuePair("id_matkul", id_matkul));
+				params.add(new BasicNameValuePair("jawaban", answer));
+				params.add(new BasicNameValuePair("username", Login.username));
+	
+				// sending modified data through http request
+				// Notice that update product url accepts POST method
+				JSONObject json1 = jsonParser.makeHttpRequest(url_submit_tugas,
+						"GET", params);
+				Log.d("Submit Tugas"+id_matkul,"ID_TUGAS:"+id_tugas+", ID_MATKUL: "+id_matkul+", Jawaban: "+jawaban+", username: "+Login.username);
+				// check json success tag
+				try {
+					 success = json1.getInt(TAG_SUCCESS);
+					
+					if (success == 1) {
+						// successfully updated
+						//Intent i = getIntent();
+						//Intent i = new Intent(getApplicationContext(),tampilTugas.class);
+						//finish();
+						//startActivity(i);
+						// send result code 100 to notify about product update
+						//setResult(100, i);
+						
+					} else {
+						// failed to update product
+					}
+					Log.d("Submit Response", json1.toString());
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
 			return null;
 		}
 
@@ -273,11 +424,21 @@ public class EditTugas extends Activity {
 			// dismiss the dialog once product uupdated
 			pDialog.dismiss();
 			if(success==1){
+				Intent i = new Intent(getApplicationContext(),tampilTugas.class);
+				finish();
+				startActivity(i);
 				Toast.makeText(getApplicationContext(), "Submit tugas berhasil!", Toast.LENGTH_LONG).show();
 			}
 			else{
 				Toast.makeText(getApplicationContext(), "Submit tugas gagal!", Toast.LENGTH_LONG).show();
 			}
 		}
+	}
+	
+	@Override
+	public void onBackPressed(){
+		Intent i = new Intent(getApplicationContext(),tampilTugas.class);
+		finish();
+		startActivity(i);
 	}
 }

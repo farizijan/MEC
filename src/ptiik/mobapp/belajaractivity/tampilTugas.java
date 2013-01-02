@@ -89,6 +89,7 @@ public class tampilTugas extends ListActivity {
 				Log.d("Tugas Details", idTugas+", "+ idMatkul);
 				// starting new activity and expecting some response back
 				startActivityForResult(in, 100);
+				finish();
 			}
 		});
 
