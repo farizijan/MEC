@@ -39,7 +39,7 @@
         android:hint="tuliskan jawaban disini"
         android:ems="10"
         android:inputType="textMultiLine"
-        android:visibility="invisible" >
+        android:visibility="gone" >
 
         <requestFocus />
     </EditText>
@@ -50,13 +50,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="choose file"
-        android:visibility="invisible" />
+        android:visibility="gone" />
     
     <TextView
         android:id="@+id/filelocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="file location: "
+        android:visibility="gone"
         android:textAppearance="?android:attr/textAppearanceSmall" />
     
     <Button

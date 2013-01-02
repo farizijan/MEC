@@ -64,6 +64,7 @@ public class EditTugas extends Activity {
 	String deskripsi;
 	String tgl_mulai;
 	String tgl_selesai;
+	int isFile;
 	// Progress Dialog
 	private ProgressDialog pDialog;
 
@@ -244,6 +245,7 @@ public class EditTugas extends Activity {
 							deskripsi=tugas.getString("deskripsi");
 							tgl_mulai=tugas.getString("tgl_mulai");
 							tgl_selesai=tugas.getString("tgl_selesai");
+							isFile=tugas.getInt("is_file");
 						}else{
 
 						}
@@ -261,11 +263,15 @@ public class EditTugas extends Activity {
 		protected void onPostExecute(String file_url) {
 			
 			
+			TextView fileLoc= (TextView) findViewById(R.id.filelocation);
 			
-			jawaban.setVisibility(1);
+			if(isFile==0)jawaban.setVisibility(1);
 			btnSave.setVisibility(1);
 			btnReminder.setVisibility(1);
-			btnFile.setVisibility(1);
+			if(isFile==1){
+				btnFile.setVisibility(1);
+				fileLoc.setVisibility(1);
+			}
 			txtJudul.setText("("+id_matkul+")" +judul);
 			txtDeskripsi.setText(deskripsi);
 			tanggalMulai.setText("Tanggal mulai: "+tgl_mulai);
@@ -301,7 +307,7 @@ public class EditTugas extends Activity {
 		protected String doInBackground(String... args) {
 
 			// getting updated data from EditTexts
-			String answer= jawaban.getText().toString();
+			String jwb= jawaban.getText().toString();
 			
 			if(pathToOurFile!=null){
 				
@@ -334,6 +340,19 @@ public class EditTugas extends Activity {
 		    	outputStream.writeBytes(lineEnd);
 		    	outputStream.flush();
 		    	
+		    	outputStream.writeBytes(twoHyphens + boundary + lineEnd);
+		    	outputStream.writeBytes("Content-Disposition: form-data; name=\"id_tugas\""+ lineEnd);
+		    	outputStream.writeBytes(lineEnd);
+		    	outputStream.writeBytes(id_tugas);
+		    	outputStream.writeBytes(lineEnd);
+		    	outputStream.flush();
+		    	
+		    	outputStream.writeBytes(twoHyphens + boundary + lineEnd);
+		    	outputStream.writeBytes("Content-Disposition: form-data; name=\"id_matkul\""+ lineEnd);
+		    	outputStream.writeBytes(lineEnd);
+		    	outputStream.writeBytes(id_matkul);
+		    	outputStream.writeBytes(lineEnd);
+		    	outputStream.flush();
 		    	outputStream.writeBytes(twoHyphens + boundary + lineEnd);
 		    	outputStream.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\";filename=\"" + pathToOurFile +"\"" + lineEnd);
 		    	outputStream.writeBytes(lineEnd);
@@ -384,14 +403,14 @@ public class EditTugas extends Activity {
 				List<NameValuePair> params = new ArrayList<NameValuePair>();
 				params.add(new BasicNameValuePair("id_tugas", id_tugas));
 				params.add(new BasicNameValuePair("id_matkul", id_matkul));
-				params.add(new BasicNameValuePair("jawaban", answer));
+				params.add(new BasicNameValuePair("jawaban", jwb));
 				params.add(new BasicNameValuePair("username", Login.username));
 	
 				// sending modified data through http request
 				// Notice that update product url accepts POST method
 				JSONObject json1 = jsonParser.makeHttpRequest(url_submit_tugas,
 						"GET", params);
-				Log.d("Submit Tugas"+id_matkul,"ID_TUGAS:"+id_tugas+", ID_MATKUL: "+id_matkul+", Jawaban: "+jawaban+", username: "+Login.username);
+				Log.d("Submit Tugas"+id_matkul,"ID_TUGAS:"+id_tugas+", ID_MATKUL: "+id_matkul+", Jawaban: "+jwb+", username: "+Login.username);
 				// check json success tag
 				try {
 					 success = json1.getInt(TAG_SUCCESS);
