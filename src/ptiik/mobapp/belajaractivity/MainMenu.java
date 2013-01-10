@@ -27,6 +27,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Window;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -55,6 +56,7 @@ public class MainMenu extends Activity implements OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main_menu);
         login=getSharedPreferences("mec-data", 0);
         Log.d("Shr-Login", "username: "+ login.getString("username", ""));
@@ -126,8 +128,6 @@ public class MainMenu extends Activity implements OnClickListener {
             }
         }
         //END GCM
-        View jadwalButton=findViewById(R.id.jadwal_button);
-        jadwalButton.setOnClickListener(this);
         View tugasButton=findViewById(R.id.tugas_button);
         tugasButton.setOnClickListener(this);
         View logoutButton=findViewById(R.id.logout_button);
@@ -153,10 +153,6 @@ public class MainMenu extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
-		case R.id.jadwal_button:
-			Intent k = new Intent(this, SetAlarm.class );
-			startActivity(k);
-			break;
 		case R.id.tugas_button:
 			Intent i = new Intent(this, tampilTugas.class );
 			startActivity(i);

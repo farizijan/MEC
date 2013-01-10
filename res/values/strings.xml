@@ -6,7 +6,7 @@
     <string name="title_activity_login">Login</string>
     <string name="uname_hint">username</string>
     <string name="pass_hint">password</string>
-    <string name="login_button">login</string>
+    <string name="login_button">LOGIN</string>
     <string name="jadwal_button">Jadwal</string>
     <string name="tugas_button">Tugas</string>
     <string name="logout_button">logout</string>

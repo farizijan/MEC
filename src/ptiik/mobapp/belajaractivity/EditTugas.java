@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,7 +46,7 @@ public class EditTugas extends Activity {
 
 	int bytesRead, bytesAvailable, bufferSize;
 	byte[] buffer;
-	int maxBufferSize = 1*1024*1024;
+	int maxBufferSize = 5*1024*1024;
 
 	TextView txtJudul;
 	TextView txtDeskripsi;
@@ -88,6 +89,7 @@ public class EditTugas extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.edit_tugas);
 
 		// save button
@@ -297,7 +299,7 @@ public class EditTugas extends Activity {
 			pDialog = new ProgressDialog(EditTugas.this);
 			pDialog.setMessage("Submit tugas ...");
 			pDialog.setIndeterminate(false);
-			pDialog.setCancelable(true);
+			pDialog.setCancelable(false);
 			pDialog.show();
 		}
 

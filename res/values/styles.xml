@@ -1,5 +1,13 @@
 <resources>
 
     <style name="AppTheme" parent="android:Theme.Light" />
+    
+    <color name="background">#6BD1ED</color>
+    
+    <style name="button" parent="android:Widget.Button">
+        <item name="android:background">@drawable/button</item>
+    </style>
+	<color name="orange">#FFAF67</color>
+	<color name="black">#000</color>
 
 </resources>

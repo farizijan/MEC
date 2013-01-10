@@ -1,42 +1,63 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AppTheme"
+    android:background="@color/background"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-
+    android:padding="50dp"
+    android:background="@color/background" >
+    
     <TextView
         android:id="@+id/judul"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        
+        android:layout_gravity="center_horizontal"
+        android:textSize="15pt"
+        android:textStyle="bold"
+        android:layout_marginTop="90dp"
+        android:layout_marginBottom="10dp"
+        android:layout_centerHorizontal="true"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
         android:id="@+id/deskripsi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        
+        android:layout_below="@+id/judul"
+        android:layout_margin="10dp"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/tanggalmulai"
+        android:layout_below="@+id/deskripsi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
         android:id="@+id/tanggalselesai"
+        android:layout_below="@+id/tanggalmulai"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <EditText
         android:id="@+id/jawaban"
+        android:layout_below="@+id/tanggalselesai"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:hint="tuliskan jawaban disini"
+        android:gravity="top|left"
+        android:layout_margin="10dp"
         android:ems="10"
         android:inputType="textMultiLine"
         android:visibility="gone" >
@@ -47,33 +68,53 @@
     
     <Button
         android:id="@+id/choosefile"
+        android:layout_below="@+id/tanggalselesai"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="choose file"
+        android:layout_margin="10dp"
         android:visibility="gone" />
     
     <TextView
         android:id="@+id/filelocation"
+        android:layout_below="@+id/choosefile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:text="file location: "
         android:visibility="gone"
         android:textAppearance="?android:attr/textAppearanceSmall" />
     
     <Button
         android:id="@+id/submit"
-        android:layout_width="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:textStyle="bold"
+        android:textSize="9pt"
         android:text="Submit"
+        style="@style/button"
         android:visibility="invisible" />
     
     
     <Button
         android:id="@+id/setReminder"
-        android:layout_width="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingRight="10dp"
+        android:textStyle="bold"
+        android:textSize="9pt"
+        style="@style/button"
         android:text="Set Reminder"
         android:visibility="invisible"
-        android:layout_marginLeft="45pt"/>
+        />
 
-</LinearLayout>
+</RelativeLayout>
+</ScrollView>

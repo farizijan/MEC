@@ -41,7 +41,8 @@ public class DisplayAlarmNotification extends Activity {
  
         //---100ms delay, vibrate for 250ms, pause for 100 ms and
         // then vibrate for 500ms---
-        notif.vibrate = new long[] { 100, 250, 100, 500};        
+        notif.vibrate = new long[] { 100, 250, 100, 500};
+        notif.defaults |= Notification.DEFAULT_SOUND;
         nm.notify(notifID, notif);
         //---destroy the activity---
         finish();

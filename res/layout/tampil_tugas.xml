@@ -2,10 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@color/background"
     android:orientation="vertical">
 	<!-- Main ListView 
 		 Always give id value as list(@android:id/list)
 	-->
+	<TextView
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center_horizontal"
+	    android:textSize="14pt"
+	    android:textStyle="bold"
+	    android:layout_marginTop="25dp"
+	    android:layout_marginBottom="25dp"
+	    android:text="List Tugas"
+	     />
     <ListView
         android:id="@android:id/list"
         android:layout_width="fill_parent"

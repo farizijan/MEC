@@ -1,52 +1,91 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AppTheme"
+    android:background="@color/background"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical"
+    android:background="@color/background" >
 
-    <Button
-        android:id="@+id/jadwal_button"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="74dp"
-        android:text="@string/jadwal_button" />
-
-    <Button
-        android:id="@+id/tugas_button"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/jadwal_button"
-        android:layout_below="@+id/jadwal_button"
-        android:layout_marginTop="19dp"
-        android:text="@string/tugas_button" />
-
-    <Button
-        android:id="@+id/logout_button"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tugas_button"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="114dp"
-        android:text="@string/logout_button" />
-
-    <TextView
-        android:id="@+id/Hari"
+    <ImageView
+        android:id="@+id/logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="36dp"
-        android:textSize="20dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="30dp"
+        android:contentDescription="Mobile E-Learning"
+        android:scaleType="fitCenter"
+        android:src="@drawable/logo" />
+    
+    <TextView
+        android:id="@+id/judul"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/logo"
+        android:textSize="8pt"
+        android:layout_marginTop="65dp"
+        android:layout_marginLeft="10dp"
+        android:textStyle="bold"
+        android:typeface="monospace"
+        style="@style/AppTheme"
         android:text="Main Menu" />
 
     <Button
-        android:id="@+id/exit_button"
-        android:layout_width="200dp"
+        android:id="@+id/tugas_button"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/logout_button"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="26dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:paddingLeft="35dp"
+        android:paddingRight="35dp"
+        android:textStyle="bold"
+        android:textSize="9pt"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/judul"
+        android:layout_centerHorizontal="true"
+        style="@style/button"
+        android:text="@string/tugas_button" />
+
+    <Button
+        android:id="@+id/logout_button"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:paddingLeft="35dp"
+        android:paddingRight="35dp"
+        android:textStyle="bold"
+        android:textSize="9pt"
+        android:layout_marginTop="70dp"
+        android:layout_below="@+id/tugas_button"
+        android:layout_centerHorizontal="true"
+        style="@style/button"
+        android:text="@string/logout_button" />
+
+
+    <Button
+        android:id="@+id/exit_button"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:paddingLeft="35dp"
+        android:paddingRight="35dp"
+        android:textStyle="bold"
+        android:textSize="9pt"
+        android:layout_below="@+id/logout_button"
+        android:layout_centerHorizontal="true"
+        style="@style/button"
+        android:layout_marginTop="10dp"
         android:text="Exit" />
 
 </RelativeLayout>
+</ScrollView>
